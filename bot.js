@@ -1,3 +1,4 @@
+
 const mineflayer = require('mineflayer')
 const readline = require('readline')
 
@@ -13,7 +14,7 @@ function sleep(ms) {
 function startBot() {
   const bot = mineflayer.createBot({
     host: 'zurnacraft.net',
-    username: 'ytufgeasx2',
+    username: 'salbeni',
     version: false
   })
 
@@ -45,7 +46,8 @@ function startBot() {
     await sleep(5000)
 
     // /afk
-
+    bot.chat("/afk")
+    console.log('/afk yazıldı')
 
     console.log('Konsoldan yaz → oyuna gider 👇')
   })
@@ -82,5 +84,3 @@ function startBot() {
 }
 
 startBot()
-
-
