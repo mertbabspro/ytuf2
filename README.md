@@ -1,1 +1,1 @@
-# ytuf2
+# mineafk
