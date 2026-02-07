@@ -45,8 +45,7 @@ function startBot() {
     await sleep(5000)
 
     // /afk
-    bot.chat("/afk")
-    console.log('/afk yazıldı')
+
 
     console.log('Konsoldan yaz → oyuna gider 👇')
   })
@@ -83,4 +82,5 @@ function startBot() {
 }
 
 startBot()
+
 
