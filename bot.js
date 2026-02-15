@@ -151,7 +151,7 @@ bot.on('spawn', () => {
         setTimeout(() => {
           try {
             if (bot.entity) {
-              bot.chat('/afk');
+              bot.chat('/home 2');
               console.log('AFK komutu gönderildi');
               logChat('AFK komutu gönderildi: /afk');
             }
@@ -222,3 +222,4 @@ bot.on('end', () => {
 
 console.log('Bot başlatılıyor...');
 logChat('Bot başlatılıyor...');
+
