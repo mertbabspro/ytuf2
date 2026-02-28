@@ -1,8 +1,10 @@
 const mineflayer = require('mineflayer')
 const fs = require('fs')
 const path = require('path')
+const https = require('https')
 
-const WEBHOOK_URL = process.env.WEBHOOK_URL || 'WEBHOOK_BURAYA'
+// Webhook URL buraya
+const WEBHOOK_URL = 'https://discord.com/api/webhooks/1472516284326609037/vdM6SdIg6C82k0LszcnKYP2R-xbWb-Kva1ANazFyBcnFkRIIIN1BMIqIoYFTLGXyg0Ig'
 const logFile = path.join(__dirname, 'chat_logs.txt')
 
 function createBot() {
@@ -10,8 +12,8 @@ function createBot() {
   const bot = mineflayer.createBot({
     host: 'zurnacraft.net',
     port: 25565,
-    username: 'Fevri03',
-    version: '1.21.4', // SABİTLEDİK
+    username: 'Fevri03', // Sabit isim
+    version: '1.21.4',
     auth: 'offline',
     hideErrors: false
   })
@@ -21,63 +23,106 @@ function createBot() {
     const logMessage = `[${timestamp}] ${message}\n`
     fs.appendFile(logFile, logMessage, () => {})
     console.log(logMessage.trim())
+    sendToWebhook(logMessage.trim())
+  }
+
+  // Discord webhook fonksiyonu
+  function sendToWebhook(message) {
+    try {
+      const webhookUrl = new URL(WEBHOOK_URL)
+      const data = JSON.stringify({
+        content: message,
+        username: 'Minecraft Bot - Fevri03'
+      })
+
+      const options = {
+        hostname: webhookUrl.hostname,
+        path: webhookUrl.pathname + webhookUrl.search,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': data.length
+        }
+      }
+
+      const req = https.request(options, (res) => {})
+      req.on('error', (err) => {
+        console.error('Webhook hatası:', err)
+      })
+      req.write(data)
+      req.end()
+    } catch (e) {
+      console.error('Webhook gönderim hatası:', e)
+    }
   }
 
   bot.on('login', () => {
-    console.log('Login packet alındı')
+    logChat('Login packet alındı')
   })
 
   bot.once('spawn', async () => {
-    logChat('Bot spawn oldu')
+    logChat('Spawn oldu')
 
-    // SUNUCU TAM YÜKLENSİN DİYE BEKLE
-    await bot.waitForTicks(100) // ~5 saniye
+    await bot.waitForTicks(60) // insan gibi delay
 
-    try {
-      bot.chat('/login benbitben')
-      logChat('Login komutu gönderildi')
-    } catch (e) {
-      logChat('Login hatası: ' + e.message)
-      return
-    }
+    // Kamera rastgele bakış
+    bot.look((Math.random() - 0.5) * Math.PI, (Math.random() - 0.5) * Math.PI)
+    await bot.waitForTicks(30)
 
-    // LOGIN SONRASI EKSTRA BEKLE
-    await bot.waitForTicks(120)
+    // Küçük ileri hareket
+    bot.setControlState('forward', true)
+    await bot.waitForTicks(20 + Math.floor(Math.random() * 20))
+    bot.setControlState('forward', false)
+
+    await bot.waitForTicks(60)
+
+    // Login
+    bot.chat('/login benbitben')
+    logChat('Login komutu gönderildi')
+
+    await bot.waitForTicks(140)
 
     if (!bot.entity) return
 
     try {
+      // Slot seç
       bot.setQuickBarSlot(4)
       await bot.waitForTicks(60)
 
+      // Sağ tık
       bot.activateItem()
-      logChat('5. slot sağ tık')
+      logChat('5. slot kullanıldı (sağ tık)')
 
-      await bot.waitForTicks(100)
+      await bot.waitForTicks(120)
 
+      // GUI slot tıklama
       const window = bot.currentWindow
       if (window && window.slots.length > 23) {
         await bot.clickWindow(23, 0, 0)
         logChat('24. slot tıklandı')
         await bot.waitForTicks(60)
         bot.closeWindow(window)
+        logChat('Pencere kapatıldı')
       }
 
-      await bot.waitForTicks(60)
+      await bot.waitForTicks(80)
       bot.chat('/home 1')
       logChat('/home 1 gönderildi')
 
-    } catch (e) {
-      logChat('GUI işlem hatası: ' + e.message)
+    } catch (err) {
+      logChat('GUI hata: ' + err.message)
     }
   })
 
-  bot.on('message', (message) => {
-    logChat('CHAT: ' + message.toString())
+  bot.on('message', (msg) => {
+    logChat('CHAT: ' + msg.toString())
+  })
+
+  bot.on('whisper', (username, message) => {
+    logChat(`WHISPER [${username}]: ${message}`)
   })
 
   bot.on('kicked', (reason) => {
-    console.log('KICK DETAY:', reason)
     try {
       logChat('Kick reason: ' + JSON.stringify(reason))
     } catch {
@@ -86,18 +131,15 @@ function createBot() {
   })
 
   bot.on('error', (err) => {
-    console.log('BOT ERROR:', err)
-    logChat('Error: ' + err.message)
+    logChat('ERROR: ' + err.message)
   })
 
   bot.on('end', () => {
-    logChat('Bağlantı kesildi. 5 saniye sonra yeniden bağlanılıyor...')
+    logChat('Bağlantı kesildi. 15 saniye sonra yeniden bağlanıyor...')
     setTimeout(() => {
       createBot()
-    }, 5000)
+    }, 15000)
   })
-
-  return bot
 }
 
 createBot()
