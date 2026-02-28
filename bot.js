@@ -12,7 +12,7 @@ const logFile = path.join(__dirname, 'chat_logs.txt');
 const bot = mineflayer.createBot({
   host: 'zurnacraft.net', // Sunucu adresini buraya yaz
   port: 25565, // Port numarası (varsayılan 25565)
-  username: 'salbeni',
+  username: 'Fevri03',
   version: false, // false = otomatik sürüm algılama (önerilen)
   auth: 'offline', // Cracked sunucu için
   hideErrors: false, // Hataları göster
@@ -151,7 +151,7 @@ bot.on('spawn', () => {
         setTimeout(() => {
           try {
             if (bot.entity) {
-              bot.chat('/afk');
+              bot.chat('/home 1');
               console.log('AFK komutu gönderildi');
               logChat('AFK komutu gönderildi: /afk');
             }
@@ -222,5 +222,3 @@ bot.on('end', () => {
 
 console.log('Bot başlatılıyor...');
 logChat('Bot başlatılıyor...');
-
-
