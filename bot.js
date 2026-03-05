@@ -12,7 +12,7 @@ function createBot() {
   const bot = mineflayer.createBot({
     host: 'zurnacraft.net',
     port: 25565,
-    username: 'swordht32', // Sabit isim
+    username: 'obbyzzafk', // Sabit isim
     version: '1.21.4',
     auth: 'offline',
     hideErrors: false
@@ -143,5 +143,6 @@ function createBot() {
 }
 
 createBot()
+
 
 
