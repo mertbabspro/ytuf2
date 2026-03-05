@@ -138,11 +138,12 @@ function createBot() {
     logChat('Bağlantı kesildi. 15 saniye sonra yeniden bağlanıyor...')
     setTimeout(() => {
       createBot()
-    }, 15000)
+    }, 60000)
   })
 }
 
 createBot()
+
 
 
 
